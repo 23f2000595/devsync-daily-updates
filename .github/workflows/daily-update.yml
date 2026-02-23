@@ -1,0 +1,44 @@
+name: Daily Repository Update - 23f2000595@ds.study.iitm.ac.in
+
+on:
+  schedule:
+    # Runs at 04:30 UTC daily
+    - cron: '30 4 * * *'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Configure Git with email 23f2000595@ds.study.iitm.ac.in
+      run: |
+        git config --global user.name "DevSync Automation"
+        git config --global user.email "23f2000595@ds.study.iitm.ac.in"
+    
+    - name: Create daily status file - 23f2000595@ds.study.iitm.ac.in
+      run: |
+        # Create timestamp
+        TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+        DATE_ONLY=$(date -u '+%Y-%m-%d')
+        
+        # Create daily status file
+        cat >> daily-status.log << EOL
+        [$TIMESTAMP] Daily automated update
+        - Repository: devsync-daily-updates
+        - Updated by: 23f2000595@ds.study.iitm.ac.in
+        - Purpose: DevSync Solutions automation
+        
+        EOL
+        
+        # Also create a dated file for better tracking
+        echo "Update performed on $DATE_ONLY by 23f2000595@ds.study.iitm.ac.in" > "status-${DATE_ONLY}.txt"
+    
+    - name: Commit changes - 23f2000595@ds.study.iitm.ac.in
+      run: |
+        git add daily-status.log status-*.txt
+        git commit -m "Daily automated commit: $(date -u '+%Y-%m-%d') [skip ci]"
+        git push
